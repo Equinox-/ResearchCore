@@ -20,7 +20,7 @@ the Steam Workshop.
 Making custom rules requires an understanding of XML and a passing familiarity with navigating the SE Content files 
 (Primarily `Blueprints.sbc`, `BlueprintClasses.sbc`, and `CubeBlocks.sbc`) to determine the definition ID of the items you want to block.
 Then, following the [research definition reference](https://github.com/Equinox-/ResearchCore/blob/master/examples/reference.xml) 
-you create your own research tree, or amend another tree (instructions on amending soon).
+you create your own research tree, or [amend another tree](https://github.com/Equinox-/ResearchCore/blob/master/examples/amend.xml).
 To load this file into your world it's as simple as naming it `aux_research.xml`, and placing it in this mod's world storage folder 
 (`YourSaveFolder/Storage/1227335743.sbm_ResearchCore/aux_research.xml`).
 Reload the world and your research should be in use, and those overpowered blocks you added locked behind hours of progression.  
