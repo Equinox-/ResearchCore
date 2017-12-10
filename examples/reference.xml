@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-16"?>
+<!-- This is an example of a research specification file.  These are loaded either from other mods (using the prefab loading system, more info to come) or from the aux_research.xml file in the mod's world storage directory -->
+<ArrayOfOb_ResearchDefinition xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- Defines or amends a research with the given ID -->
+	<Ob_ResearchDefinition Id="UnlockMedicalRoom">
+		<DisplayName>Medical Restoration Technology</DisplayName>
+		<Description>Techniques for restoring expired astronaut bodies</Description>
+		
+		<!-- the definition ID of the unlocked thing.  Can be a cube block, a blueprint (recipe), or a blueprint class.  Want something else?  Ask Equinox -->
+		<Unlock Type="MedicalRoom" Subtype="LargeMedicalRoom" />
+		<!-- You can repeat the unlock element, and you can have multiple researches that unlock the same thing
+			<Unlock Type="CryoChamber" Subtype="LargeBlockCryoChamber" />
+		-->
+
+		<!-- This is a All trigger, so you can have multiple child triggers, and the research will unlock when all of them are unlocked -->
+		<Trigger>
+			<!-- The Any and All triggers are composite logic triggers that unlock when any or all of the child items are unlocked respectively.  You can nest any/all. -->
+			<Any>
+				<!-- Unlocks when the player has Count of the item inside their inventory.  If Consume is true the item is removed when the condition is satisfied -->
+				<HasItem Type="Component" Subtype="Medical" Count="10" Consume="true" />
+				<!-- Unlocks when the player interacts with another character -->
+				<Interact>
+					<!-- One of these must be held to trigger this -->
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinderItem" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder2Item" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder3Item" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder4Item" />
+					<!-- If this can be satisfied by performing the interaction on an another character, or your dead body -->
+					<OnCharacterInteract>true</OnCharacterInteract>
+					<!-- the control the player has to press, from MyControlsSpace (https://github.com/KeenSoftwareHouse/SpaceEngineers/blob/master/Sources/Sandbox.Game/Game/MyControlsSpace.cs) -->
+					<GameControlId>PRIMARY_TOOL_ACTION</GameControlId>
+				</Interact>
+			</Any>
+		</Trigger>
+	</Ob_ResearchDefinition>
+	<Ob_ResearchDefinition Id="UnlockCryoChamber">
+		<DisplayName>Cryogenic Research</DisplayName>
+		<Description>Crogenic sleep technology for sustaining an astronaut during long flights</Description>
+		<Unlock Type="CryoChamber" Subtype="LargeBlockCryoChamber" />
+		<Trigger>
+			<!-- This research requires both of the following conditions to be satisfied -->
+			<All>
+				<!-- The given research ID must be in the given state. -->
+				<Research Id="UnlockMedicalRoom" State="Completed" />
+				<!-- Unlocks when the player grinds a medical room -->
+				<Interact>
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinderItem" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder2Item" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder3Item" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder4Item" />
+					<!-- The block that must be interacted with to unlock this trigger.  Can be repeated -->
+					<BlockInteractTarget Type="MedicalRoom" Subtype="LargeMedicalRoom" />
+					<GameControlId>PRIMARY_TOOL_ACTION</GameControlId>
+				</Interact>
+			</All>
+		</Trigger>
+	</Ob_ResearchDefinition>
+</ArrayOfOb_ResearchDefinition>
