@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-16"?>
+<!-- This is an example of a ammendment research specification file.  These are loaded either from other mods (using the prefab loading system, more info to come) or from the aux_research.xml file in the mod's world storage directory -->
+<ArrayOfOb_ResearchDefinition xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- Amends the medical room research (ID=UnlockMedicalRoom) -->
+	<!-- After ammending the medical room research in the reference example...
+	The research will unlock the large grid medical room, the small grid medical station, and the large grid medical station.
+	The research will unlock when the player has done both the following:
+	 - Obtained 10 medical components or ground a large grid medical room
+	 - Obtained an oxygen bottle and a hydrogen bottle or ground a small/large grid medical station -->
+	<Ob_ResearchDefinition Id="UnlockMedicalRoom">
+		<!-- If specified, this overrides the display name -->
+		<DisplayName>Medical Restoration and Maintenance Technology</DisplayName>
+		<!-- If specified, this overrides the description -->
+		<Description>Techniques for keeping you alive, and when that fails, resurrecting you</Description>
+		
+    	<!-- this can be Add, Remove, or Overwrite.  Default is Add -->
+    	<!-- Add mode adds the following definitions to what the research unlocks -->
+    	<!-- Remove mode removes the following definitions to what the research unlocks -->
+    	<!-- Overwrite mode replaces what the research unlocks with the following list -->
+		<UnlockMergeStrategy>Add</UnlockMergeStrategy>
+		<Unlock Type="MedicalRoom" Subtype="SmallGridMedicalStation" />
+		<Unlock Type="MedicalRoom" Subtype="LargeGridMedicalStation" />
+
+		<!-- this can be And, Any, or Overwrite.  Default is And -->
+		<!-- And mode means that the following trigger, and the original trigger must both be satified (good for adding dependencies on other research) -->
+		<!-- Any mode means that the following trigger or the original trigger must be satisfied. -->
+		<!-- Overwrite mode means that the original trigger is replaced with the following trigger. -->
+		<TriggerMergeStrategy>And</TriggerMergeStrategy>
+		<Trigger>
+			<Any>
+				<All>
+					<HasItem Type="OxygenContainerObject" Subtype="OxygenBottle" Count="1" Consume="true" />
+					<HasItem Type="GasContainerObject" Subtype="HydrogenBottle" Count="1" Consume="true" />
+				</All>
+				<Interact>
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinderItem" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder2Item" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder3Item" />
+					<HandItem Type="MyObjectBuilder_PhysicalGunObject" Subtype="AngleGrinder4Item" />
+					<BlockInteractTarget Type="MedicalRoom" Subtype="SmallGridMedicalStation" />
+					<BlockInteractTarget Type="MedicalRoom" Subtype="LargeGridMedicalStation" />
+					<GameControlId>PRIMARY_TOOL_ACTION</GameControlId>
+				</Interact>
+			</Any>
+		</Trigger>
+	</Ob_ResearchDefinition>
+</ArrayOfOb_ResearchDefinition>
