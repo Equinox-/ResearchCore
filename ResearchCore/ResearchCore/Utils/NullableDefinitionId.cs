@@ -22,16 +22,16 @@ namespace Equinox.ResearchCore.Utils
 
         public bool Equals(NullableDefinitionId other)
         {
-            if (Equals(null, other)) return false;
-            if (Equals(this, other)) return true;
+            if (other==null) return false;
+            if (ReferenceEquals(other, this)) return true;
             return string.Equals(Type, other.Type) && string.Equals(Subtype, other.Subtype);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            if (Equals(null, obj)) return false;
-            if (Equals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((NullableDefinitionId) obj);
+            if (other == null) return false;
+            if (ReferenceEquals(other, this)) return true;
+            return other.GetType() == GetType() && Equals((NullableDefinitionId) other);
         }
 
         public override int GetHashCode()

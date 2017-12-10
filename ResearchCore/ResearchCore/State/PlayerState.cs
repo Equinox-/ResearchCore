@@ -57,7 +57,8 @@ namespace Equinox.ResearchCore.State
                     _researchStates.Add(def.Id, ps);
                 }
                 foreach (var state in info.States)
-                    _researchStates[state.Id].Init(state);
+                    if (_researchStates.ContainsKey(state.Id))
+                        _researchStates[state.Id].Init(state);
             }
         }
 

@@ -51,14 +51,18 @@ namespace Equinox.ResearchCore.Utils
                 var def = MyDefinitionManager.Static.GetDefinitionAny(id);
                 if (def is T)
                     return true;
-                ResearchCore.LoggerStatic.Error($"Definition {id} is type {def.GetType()}, expected {typeof(T)}");
-                return false;
+                if (def != null)
+                {
+                    ResearchCore.LoggerStatic.Error($"Definition {id} is type {def.GetType()}, expected {typeof(T)}");
+                    return false;
+                }
             }
             catch
             {
-                ResearchCore.LoggerStatic.Error($"No definition for {id}");
-                return false;
+                // ignored
             }
+            ResearchCore.LoggerStatic.Error($"No definition for {id}");
+            return false;
         }
 
         public static bool ValidateDefinition(MyDefinitionId id)
