@@ -37,6 +37,10 @@
 		<DisplayName>Cryogenic Research</DisplayName>
 		<Description>Crogenic sleep technology for sustaining an astronaut during long flights</Description>
 		<Unlock Type="CryoChamber" Subtype="LargeBlockCryoChamber" />
+				
+		<!-- starts this as soon as any prerequesites are complete -->
+		<AutoStart>true</AutoStart>
+		
 		<Trigger>
 			<!-- This research requires both of the following conditions to be satisfied -->
 			<All>
