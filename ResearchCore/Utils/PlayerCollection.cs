@@ -82,12 +82,13 @@ namespace Equinox.Utils
             MyAPIGateway.Players.GetPlayers(null, (x) =>
             {
                 PlayerAuxData aux;
-                if (!_playerById.TryGetValue(x.IdentityId, out aux))
-                {
+                _playerBySteamId.TryGetValue(x.SteamUserId, out aux);
+                _playerById.TryGetValue(x.IdentityId, out aux);
+                if (aux == null)
                     aux = new PlayerAuxData(x.SteamUserId);
-                    _playerById.Add(x.IdentityId, aux);
-                    _playerBySteamId.Add(x.SteamUserId, aux);
-                }
+                _playerById[x.IdentityId] = aux;
+                _playerBySteamId[x.SteamUserId] = aux;
+                
                 ResearchCore.ResearchCore.LoggerStatic?.Debug($"Found player {x.IdentityId} ({x.IsBot})");
                 if (x.IsBot)
                     aux.Bots.Add(x);
@@ -104,8 +105,7 @@ namespace Equinox.Utils
                 .Select(x => x.Key));
             foreach (var l in _keysToRemove)
             {
-                ResearchCore.ResearchCore.LoggerStatic.Debug(
-                    $"Removing player {l}/{_playerById[l].AssociatedSteamId} because no entries");
+                ResearchCore.ResearchCore.LoggerStatic.Debug($"Removing player {l}/{_playerById[l].AssociatedSteamId} because no entries");
                 _playerBySteamId.Remove(_playerById[l].AssociatedSteamId);
                 _playerById.Remove(l);
             }
