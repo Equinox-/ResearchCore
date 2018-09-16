@@ -55,7 +55,7 @@ namespace Equinox.ResearchCore.Modules
             if (player == null)
                 return null;
             if (args.Count < 2 || args[1].Equals("help"))
-                return "Usage: !research (start|cancel|info|available|in-progress)";
+                return "Usage: !research (start|cancel|info|available|in-progress|completed)";
             var cmd = args[1].ToLower();
             switch (cmd)
             {

@@ -165,6 +165,12 @@ namespace Equinox.ResearchCore.Definition
                     _dest.Trigger = ob.Trigger;
                 if (ob.AutoStart.HasValue)
                     _dest.AutoStart = ob.AutoStart;
+                if (!string.IsNullOrWhiteSpace(ob.CompletionMessage))
+                    _dest.CompletionMessage = ob.CompletionMessage;
+                if (ob.ShowCompletionWindow.HasValue)
+                    _dest.ShowCompletionWindow = ob.ShowCompletionWindow;
+                if (ob.UpdatesAsNotifications.HasValue)
+                    _dest.UpdatesAsNotifications = ob.UpdatesAsNotifications;
                 else if (ob.Trigger?.Simplify() != null)
                 {
                     switch (_dest.TriggerMergeStrategy)

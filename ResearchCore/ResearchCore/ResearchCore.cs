@@ -36,6 +36,13 @@ namespace Equinox.ResearchCore
             get { return _loggerStatic ?? (_loggerStatic = new CustomLogger()); }
         }
 
+        public override void BeforeStart()
+        {
+            base.BeforeStart();
+            Players = new PlayerCollection();
+            Manager = new ResearchManager(this);
+        }
+
         public override void UpdateAfterSimulation()
         {
             if (!_init)
@@ -47,8 +54,6 @@ namespace Equinox.ResearchCore
         private void DoInit()
         {
             _init = true;
-            Players = new PlayerCollection();
-            Manager = new ResearchManager(this);
             Manager.Attach();
         }
         

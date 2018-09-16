@@ -30,7 +30,21 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders
         [XmlIgnore]
         public bool? AutoStart;
 
+        [DefaultValue(null)]
+        public string DisplayName;
 
+        [DefaultValue(null)]
+        public string Description;
+
+        [DefaultValue(null)]
+        public string CompletionMessage;
+
+        [XmlIgnore]
+        public bool? UpdatesAsNotifications;
+
+        [XmlIgnore]
+        public bool? ShowCompletionWindow;
+        
         [DefaultValue(null)]
         [XmlElement(nameof(AutoStart), IsNullable = true)]
         public string AutoStartSerial
@@ -42,20 +56,29 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders
                 else AutoStart = bool.Parse(value);
             }
         }
+        
+        [DefaultValue(null)]
+        [XmlElement(nameof(UpdatesAsNotifications), IsNullable = true)]
+        public string UpdatesAsNotificationsSerial
+        {
+            get { return UpdatesAsNotifications?.ToString(); }
+            set
+            {
+                if (value == null) UpdatesAsNotifications = null;
+                else UpdatesAsNotifications = bool.Parse(value);
+            }
+        }
 
         [DefaultValue(null)]
-        public string DisplayName;
-
-        [DefaultValue(null)]
-        public string Description;
-
-        [DefaultValue(null)]
-        public string CompletionMessage;
-
-        [DefaultValue(false)]
-        public bool? UpdatesAsNotifications;
-
-        [DefaultValue(true)]
-        public bool? ShowCompletionWindow;
+        [XmlElement(nameof(ShowCompletionWindow), IsNullable = true)]
+        public string ShowCompletionWindowSerial
+        {
+            get { return ShowCompletionWindow?.ToString(); }
+            set
+            {
+                if (value == null) ShowCompletionWindow = null;
+                else ShowCompletionWindow = bool.Parse(value);
+            }
+        }
     }
 }

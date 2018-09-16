@@ -7,6 +7,7 @@ using Equinox.ResearchCore.Definition.ObjectBuilders.Triggers;
 using Equinox.ResearchCore.Utils;
 using Equinox.Utils.Logging;
 using Sandbox.Definitions;
+using Sandbox.ModAPI;
 using VRage.Game;
 
 namespace Equinox.ResearchCore.Definition
@@ -61,6 +62,9 @@ namespace Equinox.ResearchCore.Definition
                 AutoStart = AutoStart,
                 Description = Description,
                 DisplayName = DisplayName,
+                CompletionMessage = CompletionMessage,
+                UpdatesAsNotifications = UpdatesAsNotifications,
+                ShowCompletionWindow = ShowCompletionWindow,
                 Trigger = (Ob_Trigger_All) trigger
             };
         }
