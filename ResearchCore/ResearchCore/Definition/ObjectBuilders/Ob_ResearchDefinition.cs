@@ -48,5 +48,14 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders
 
         [DefaultValue(null)]
         public string Description;
+
+        [DefaultValue(null)]
+        public string CompletionMessage;
+
+        [DefaultValue(false)]
+        public bool? UpdatesAsNotifications;
+
+        [DefaultValue(true)]
+        public bool? ShowCompletionWindow;
     }
 }

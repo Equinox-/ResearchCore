@@ -194,7 +194,7 @@ namespace Equinox.ResearchCore.Modules
                     break;
                 case ResearchState.Completed:
                     msg = "completed";
-                    if (!HideMessages)
+                    if (!HideMessages && research.Definition.ShowCompletionWindow)
                         _futureDisplay.Enqueue(new FutureDisplay {State = research, ShowDialog = ShowResearchComplete});
                     break;
                 case ResearchState.Failed:
@@ -204,8 +204,14 @@ namespace Equinox.ResearchCore.Modules
                     throw new Exception($"State out of range {@new}");
             }
 
-            if (msg != null && !HideMessages)
-                MyAPIGateway.Utilities.ShowMessage("Research", $"You've {msg} {research.Definition.DisplayName}");
+            if (msg == null || HideMessages) return;
+            var resMsg = @new == ResearchState.Completed && !string.IsNullOrEmpty(research.Definition.CompletionMessage)
+                ? research.Definition.CompletionMessage
+                : $"You've {msg} {research.Definition.DisplayName}";
+            if (research.Definition.UpdatesAsNotifications)
+                MyAPIGateway.Utilities.ShowNotification(resMsg);
+            else
+                MyAPIGateway.Utilities.ShowMessage("Research", resMsg);
         }
 
         private DateTime? _lastScreenShown;
@@ -275,7 +281,9 @@ namespace Equinox.ResearchCore.Modules
         private void ShowResearchComplete(PlayerResearchState state)
         {
             if (state.State == ResearchState.Completed)
-                ShowResearchInfoScreen(state, "Research Complete!", "You've unlocked:", false, false);
+                ShowResearchInfoScreen(state, "Research Complete!",
+                    (!string.IsNullOrEmpty(state.Definition.CompletionMessage) ? state.Definition.CompletionMessage + "\n" : "") + "You've unlocked:", false,
+                    false);
         }
 
         private void ShowResearchInfoScreen(PlayerResearchState def, string title, string unlockTagLine,

@@ -19,6 +19,9 @@ namespace Equinox.ResearchCore.Definition
         public readonly ResearchTrigger Trigger;
         public readonly string DisplayName;
         public readonly string Description;
+        public readonly string CompletionMessage;
+        public readonly bool UpdatesAsNotifications;
+        public readonly bool ShowCompletionWindow;
         public readonly bool AutoStart;
 
         private IEnumerable<MyDefinitionId> SelectApplied(MyDefinitionId x)
@@ -41,6 +44,9 @@ namespace Equinox.ResearchCore.Definition
             DisplayName = string.IsNullOrWhiteSpace(ob.DisplayName) ? ob.Id : ob.DisplayName;
             Description = string.IsNullOrWhiteSpace(ob.Description) ? null : ob.Description;
             AutoStart = ob.AutoStart ?? false;
+            CompletionMessage = ob.CompletionMessage;
+            UpdatesAsNotifications = ob.UpdatesAsNotifications ?? false;
+            ShowCompletionWindow = ob.ShowCompletionWindow ?? true;
         }
 
         public Ob_ResearchDefinition GetObjectBuilder()
