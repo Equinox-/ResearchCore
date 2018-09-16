@@ -94,14 +94,16 @@ namespace Equinox.ResearchCore.Modules
                     {
                         if (amnt >= k.Trigger.Count - removed)
                         {
-                            if (_statefulStorageToSet.Add(k) && !(k.Research.StatefulStorage(k.Point) ?? false))
+                            if (_statefulStorageToSet.Add(k) && !(k.Research.StatefulStorage(k.Point) ?? false) && k.Trigger.Consume)
                                 removed += k.Trigger.Count;
                         }
                     }
+
                     if (removed > 0)
                         inv.RemoveItemsOfType((MyFixedPoint) removed, idBind.Key);
                 }
             }
+
             foreach (var k in _statefulStorageToSet)
                 k.Research.UpdateStatefulStorage(k.Point, true);
             _statefulStorageToSet.Clear();
@@ -128,6 +130,7 @@ namespace Equinox.ResearchCore.Modules
                 attach.Bind(data, key);
                 return;
             }
+
             _listeningPlayers.Add(player, attach = new PlayerBindData());
             attach.Bind(data, key);
             player.Controller.ControlledEntityChanged += OnControlledEntityChanged;
@@ -217,8 +220,6 @@ namespace Equinox.ResearchCore.Modules
                 return;
             _listeningInventories.Remove(inv);
             _listeningInventoriesOrder.RemoveAtFast(index);
-            if (_listeningInventoriesOrder.Count > 0)
-                _listeningInventories[_listeningInventoriesOrder[index]] = index;
         }
 
         private struct BindEntry : IEquatable<BindEntry>
