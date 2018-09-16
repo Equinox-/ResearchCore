@@ -105,6 +105,7 @@ namespace Equinox.ResearchCore
             {
                 Logger.Error($"Load states error: \n{e}");
             }
+
             foreach (var p in playerDict.Values)
                 if (!_playerStates.ContainsKey(p.SteamUserId))
                     AddPlayer(p);
@@ -122,16 +123,31 @@ namespace Equinox.ResearchCore
                 {
                     try
                     {
-                        var raw = Encoding.UTF8.GetString(Convert.FromBase64String(block.Program));
                         Ob_ResearchDefinition[] defs;
                         try
                         {
-                            defs = MyAPIGateway.Utilities.SerializeFromXML<Ob_ResearchDefinition[]>(raw);
+                            try
+                            {
+                                defs = MyAPIGateway.Utilities.SerializeFromXML<Ob_ResearchDefinition[]>(block.Program);
+                            }
+                            catch
+                            {
+                                defs = new[] {MyAPIGateway.Utilities.SerializeFromXML<Ob_ResearchDefinition>(block.Program)};
+                            }
                         }
                         catch
                         {
-                            defs = new[] {MyAPIGateway.Utilities.SerializeFromXML<Ob_ResearchDefinition>(raw)};
+                            var raw = Encoding.UTF8.GetString(Convert.FromBase64String(block.Program));
+                            try
+                            {
+                                defs = MyAPIGateway.Utilities.SerializeFromXML<Ob_ResearchDefinition[]>(raw);
+                            }
+                            catch
+                            {
+                                defs = new[] {MyAPIGateway.Utilities.SerializeFromXML<Ob_ResearchDefinition>(raw)};
+                            }
                         }
+
                         foreach (var k in defs)
                             Definitions.Load(k);
                     }
@@ -142,6 +158,7 @@ namespace Equinox.ResearchCore
                     }
                 }
             }
+
             {
                 var aux = Core.ReadXml<Ob_ResearchDefinition[]>(AUX_RESEARCH_STORAGE);
                 if (aux != null)
@@ -266,6 +283,7 @@ namespace Equinox.ResearchCore
                 for (var i = 0; i < value.ResearchIds.Length; i++)
                     owner.PlayerResearchState(value.ResearchIds[i], true).State = value.ResearchStates[i];
             }
+
             SetUiHidden(false);
         }
 
@@ -290,6 +308,7 @@ namespace Equinox.ResearchCore
                         i++;
                     }
                 }
+
                 SendMessage(sender, response);
             }
         }
@@ -362,6 +381,7 @@ namespace Equinox.ResearchCore
                 NetworkMessageRecieved?.Invoke(endpoint, msg);
                 return;
             }
+
             Utilities.Assert(MyAPIGateway.Multiplayer.IsServer || endpoint == MyAPIGateway.Multiplayer.ServerId,
                 "Endpoint must be server for clients, and a client for server");
             var data = MyAPIGateway.Utilities.SerializeToBinary(new MsgContainer
