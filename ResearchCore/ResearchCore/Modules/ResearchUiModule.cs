@@ -79,6 +79,7 @@ namespace Equinox.ResearchCore.Modules
                                 research = res;
                                 continue;
                             }
+
                             if (msgResult == null)
                                 msgResult = new StringBuilder("Could not find single research: ");
                             if (research != null)
@@ -86,9 +87,11 @@ namespace Equinox.ResearchCore.Modules
                             research = null;
                             msgResult.Append(", ").Append(res.Id);
                         }
+
                         if (msgResult != null)
                             return msgResult.ToString();
                     }
+
                     if (research == null)
                         return $"Could not find research: {args[2]}";
 
@@ -104,6 +107,7 @@ namespace Equinox.ResearchCore.Modules
                             case ResearchState.Failed:
                                 return $"Research {research.DisplayName} was failed";
                         }
+
                         if (!research.Trigger.BranchesWithPrereqs(player.ResearchState, player.HasUnlocked).Any())
                             return $"Research {research.DisplayName} prerequisites are not satisfied";
                         Manager.SendMessageToServer(new PlayerResearchStateControlMsg()
@@ -113,6 +117,7 @@ namespace Equinox.ResearchCore.Modules
                         });
                         return null;
                     }
+
                     if (cmd.Equals("cancel"))
                     {
                         switch (state)
@@ -124,6 +129,7 @@ namespace Equinox.ResearchCore.Modules
                             case ResearchState.Failed:
                                 return $"Research {research.DisplayName} was failed";
                         }
+
                         Manager.SendMessageToServer(new PlayerResearchStateControlMsg()
                         {
                             ResearchId = research.Id,
@@ -131,6 +137,7 @@ namespace Equinox.ResearchCore.Modules
                         });
                         return null;
                     }
+
                     if (cmd.Equals("info"))
                     {
                         _futureDisplay.Enqueue(new FutureDisplay
@@ -140,11 +147,17 @@ namespace Equinox.ResearchCore.Modules
                         });
                         return null;
                     }
+
                     return null;
                 }
                 case "available":
                 {
                     _futureDisplay.Enqueue(new FutureDisplay {State = null, ShowDialog = ShowAvailableResearch});
+                    return null;
+                }
+                case "completed":
+                {
+                    _futureDisplay.Enqueue(new FutureDisplay() {State = null, ShowDialog = ShowCompletedResearch});
                     return null;
                 }
                 case "inprogress":
@@ -190,6 +203,7 @@ namespace Equinox.ResearchCore.Modules
                 default:
                     throw new Exception($"State out of range {@new}");
             }
+
             if (msg != null && !HideMessages)
                 MyAPIGateway.Utilities.ShowMessage("Research", $"You've {msg} {research.Definition.DisplayName}");
         }
@@ -223,6 +237,11 @@ namespace Equinox.ResearchCore.Modules
                 return player.ResearchState(id) == ResearchState.NotStarted && def.Trigger
                            .BranchesWithPrereqs(player.ResearchState, player.HasUnlocked).Any();
             });
+        }
+
+        private void ShowCompletedResearch(PlayerResearchState state)
+        {
+            ShowResearchList("Completed Research", (player, id) => player.ResearchState(id) == ResearchState.Completed);
         }
 
         private void ShowInProgressResearch(PlayerResearchState state)
@@ -269,6 +288,7 @@ namespace Equinox.ResearchCore.Modules
                 content.Append(def.Definition.Description).Append('\n');
                 hasPrevBlock = true;
             }
+
             if (showRequirements)
             {
                 if (hasPrevBlock)
@@ -278,6 +298,7 @@ namespace Equinox.ResearchCore.Modules
                 foreach (var branch in def.Definition.Trigger.Branches)
                     StringifyTriggerBranch(def, content, def.Definition.Trigger.Branches.Count > 1 ? "  " : "", branch);
             }
+
             if (unlockTagLine != null)
             {
                 if (hasPrevBlock)
@@ -294,6 +315,7 @@ namespace Equinox.ResearchCore.Modules
                     content.Append(k);
                 }
             }
+
             _lastScreenShown = DateTime.Now;
             MyAPIGateway.Utilities.ShowMissionScreen(title,
                 def.Definition.DisplayName + (showState ? ": " + CapWords(StringifyState(def.State)) : ""),
@@ -311,6 +333,7 @@ namespace Equinox.ResearchCore.Modules
                     tmp[i] = char.ToUpper(s[i]);
                 else tmp[i] = s[i];
             }
+
             return new string(tmp);
         }
 
@@ -322,6 +345,7 @@ namespace Equinox.ResearchCore.Modules
                 output.Append(indent).Append(indent.Length > 0 ? 'A' : 'a').Append("ll of:\n");
                 indent += "  ";
             }
+
             foreach (var k in branch.ResearchStates)
             {
                 output.Append(indent).Append(Manager.Definitions.ResearchById(k.Key).DisplayName ?? k.Key)
@@ -330,6 +354,7 @@ namespace Equinox.ResearchCore.Modules
                     output.Append(" (done)");
                 output.Append("\n");
             }
+
             foreach (var k in branch.Unlocked)
             {
                 output.Append(indent).Append(MyDefinitionManager.Static.GetDefinitionAny(k)?.DisplayNameText ??
@@ -339,6 +364,7 @@ namespace Equinox.ResearchCore.Modules
                     output.Append(" (done)");
                 output.Append("\n");
             }
+
             foreach (var piece in branch.StatefulTriggers.Select(state.Definition.Trigger.StateStorageProvider))
             {
                 var hasItem = piece as Ob_Trigger_HasItem;
@@ -362,6 +388,7 @@ namespace Equinox.ResearchCore.Modules
                         if (!string.IsNullOrWhiteSpace(desc))
                             output.Append("(").Append(desc).Append(") ");
                     }
+
                     output.Append("with ");
                     var firstTarget = true;
                     if (interact.OnCharacterInteract)
@@ -369,6 +396,7 @@ namespace Equinox.ResearchCore.Modules
                         firstTarget = false;
                         output.Append("another character");
                     }
+
                     var blocksPrinted = 0;
                     foreach (var entry in interact.BlockInteractTarget)
                     {
@@ -378,6 +406,7 @@ namespace Equinox.ResearchCore.Modules
                         output.Append(MyDefinitionManager.Static.GetDefinitionAny(entry)?.DisplayNameText ??
                                       entry.ToString());
                     }
+
                     output.Append(" using ");
                     if (interact.HandItem.Count == 0)
                         output.Append("any hand item");
