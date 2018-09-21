@@ -18,12 +18,11 @@ namespace Equinox.ResearchCore.State
         public ResearchManager Manager { get; }
         public IMyPlayer Player { get; }
 
-        private readonly Dictionary<string, PlayerResearchState> _researchStates =
-            new Dictionary<string, PlayerResearchState>();
-
-        private readonly Dictionary<MyDefinitionId, int> _unlockPins =
-            new Dictionary<MyDefinitionId, int>(MyDefinitionId.Comparer);
-
+        public bool AdminMode;
+        
+        private readonly Dictionary<string, PlayerResearchState> _researchStates = new Dictionary<string, PlayerResearchState>();
+        private readonly Dictionary<MyDefinitionId, int> _unlockPins = new Dictionary<MyDefinitionId, int>(MyDefinitionId.Comparer);
+        
         public IReadOnlyCollection<PlayerResearchState> ResearchStates
         {
             get { return _researchStates.Values; }
@@ -46,6 +45,7 @@ namespace Equinox.ResearchCore.State
         {
             Manager = manager;
             Player = player;
+            AdminMode = info.AdminMode;
             if (info?.States != null)
             {
                 foreach (var state in info.States)
@@ -108,6 +108,7 @@ namespace Equinox.ResearchCore.State
             return new Ob_PlayerState()
             {
                 SteamId = Player.SteamUserId,
+                AdminMode = AdminMode,
                 States = _researchStates.Values
                     .Where(x => x.State != Definition.ResearchState.NotStarted || x.StatefulKeys.Count > 0)
                     .Select(x => x.GetObjectBuilder()).ToArray()

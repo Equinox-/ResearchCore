@@ -70,6 +70,7 @@ namespace Equinox.ResearchCore
                 new InteractionModuleClient(this), new InteractionModuleServer(this),
                 new ReplicationModuleClient(this), new ReplicationModuleServer(this),
                 new BlueprintProhibitor(this), new PlayerResearchStateControlServer(this),
+                new LocationModule(this), new ResearchUiAdminModule(this), 
             };
         }
 

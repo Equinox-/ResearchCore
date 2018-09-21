@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Equinox.ResearchCore.State;
 using Equinox.ResearchCore.Utils;
 using Equinox.Utils;
-using Equinox.Utils.Logging;
 using Sandbox.Definitions;
-using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using VRage.Game;
 using VRage.Game.Components;

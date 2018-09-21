@@ -25,6 +25,8 @@ namespace Equinox.ResearchCore.Network
                     return _replicationResearchMsg;
                 if (_questControlMsg != null)
                     return _questControlMsg;
+                if (_adminMsg != null)
+                    return _adminMsg;
                 throw new Exception("Unknown message type");
             }
             set
@@ -34,6 +36,7 @@ namespace Equinox.ResearchCore.Network
                 _researchDefRequestMsg = value as ResearchDefinitionRequestMessage;
                 _replicationResearchMsg = value as ReplicationResearchMessage;
                 _questControlMsg = value as PlayerResearchStateControlMsg;
+                _adminMsg = value as ResearchAdminMessage;
             }
         }
 
@@ -54,5 +57,8 @@ namespace Equinox.ResearchCore.Network
 
         [ProtoMember]
         private PlayerResearchStateControlMsg _questControlMsg;
+
+        [ProtoMember]
+        private ResearchAdminMessage _adminMsg;
     }
 }

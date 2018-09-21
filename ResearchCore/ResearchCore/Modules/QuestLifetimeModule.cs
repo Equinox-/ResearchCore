@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Equinox.ResearchCore.Definition;
 using Equinox.ResearchCore.State;
-using Equinox.Utils.Logging;
-using Sandbox.ModAPI.Ingame;
 
 namespace Equinox.ResearchCore.Modules
 {

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Equinox.ResearchCore.Definition.ObjectBuilders.Triggers;
 using Equinox.ResearchCore.State;
-using Equinox.Utils.Logging;
-using Sandbox.Game;
 using Sandbox.ModAPI;
 using VRage;
 using VRage.Game;
@@ -17,7 +14,7 @@ namespace Equinox.ResearchCore.Modules
 {
     public class InventoryScanModule : ModuleBase
     {
-        private const int SPREAD_TICKS = 10;
+        private const int SpreadTicks = 10;
 
         public InventoryScanModule(ResearchManager mgr) : base(mgr)
         {
@@ -73,7 +70,7 @@ namespace Equinox.ResearchCore.Modules
         {
             base.Update();
             _statefulStorageToSet.Clear();
-            for (var i = _spreadOffset; i < _listeningInventoriesOrder.Count; i += SPREAD_TICKS)
+            for (var i = _spreadOffset; i < _listeningInventoriesOrder.Count; i += SpreadTicks)
             {
                 var inv = _listeningInventoriesOrder[i];
                 var ent = (inv as MyEntityComponentBase)?.Entity;
@@ -107,7 +104,7 @@ namespace Equinox.ResearchCore.Modules
             foreach (var k in _statefulStorageToSet)
                 k.Research.UpdateStatefulStorage(k.Point, true);
             _statefulStorageToSet.Clear();
-            _spreadOffset = (_spreadOffset + 1) % SPREAD_TICKS;
+            _spreadOffset = (_spreadOffset + 1) % SpreadTicks;
         }
 
         private void OnStatefulStorageAddRemove(PlayerResearchState research, string key, bool removed)

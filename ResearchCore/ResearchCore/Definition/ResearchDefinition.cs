@@ -24,6 +24,7 @@ namespace Equinox.ResearchCore.Definition
         public readonly bool UpdatesAsNotifications;
         public readonly bool ShowCompletionWindow;
         public readonly bool AutoStart;
+        public readonly bool Hidden;
 
         private IEnumerable<MyDefinitionId> SelectApplied(MyDefinitionId x)
         {
@@ -48,6 +49,7 @@ namespace Equinox.ResearchCore.Definition
             CompletionMessage = ob.CompletionMessage;
             UpdatesAsNotifications = ob.UpdatesAsNotifications ?? false;
             ShowCompletionWindow = ob.ShowCompletionWindow ?? true;
+            Hidden = ob.Hidden ?? false;
         }
 
         public Ob_ResearchDefinition GetObjectBuilder()

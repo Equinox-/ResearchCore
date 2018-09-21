@@ -8,7 +8,6 @@ using Equinox.ResearchCore.Network;
 using Equinox.ResearchCore.State;
 using Equinox.ResearchCore.Utils;
 using Equinox.Utils;
-using Equinox.Utils.Logging;
 using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using VRage.Game;
@@ -59,41 +58,26 @@ namespace Equinox.ResearchCore.Modules
             var cmd = args[1].ToLower();
             switch (cmd)
             {
+                case "grant":
+                case "revoke":
+                case "promote":
+                case "demote":
+                // ReSharper disable once StringLiteralTypo
+                case "setdata":
+                {
+                    Manager.SendMessageToServer(new ResearchAdminMessage(args));
+                    return null;
+                }
                 case "start":
                 case "info":
                 case "cancel":
                 {
                     if (args.Count < 3)
                         return $"Usage: !research {args[1]} (research identifier...)";
-                    var research = Manager.Definitions.ResearchById(args[2]);
-                    if (research == null)
-                    {
-                        StringBuilder msgResult = null;
-                        foreach (var res in Manager.Definitions.Research)
-                        {
-                            if (!res.Id.StartsWith(args[2], StringComparison.OrdinalIgnoreCase) &&
-                                !res.DisplayName.StartsWith(args[2], StringComparison.OrdinalIgnoreCase))
-                                continue;
-                            if (research == null && msgResult == null)
-                            {
-                                research = res;
-                                continue;
-                            }
-
-                            if (msgResult == null)
-                                msgResult = new StringBuilder("Could not find single research: ");
-                            if (research != null)
-                                msgResult.Append(research.Id);
-                            research = null;
-                            msgResult.Append(", ").Append(res.Id);
-                        }
-
-                        if (msgResult != null)
-                            return msgResult.ToString();
-                    }
-
-                    if (research == null)
-                        return $"Could not find research: {args[2]}";
+                    string msg;
+                    var research = Manager.TryFindResearch(args[2], out msg);
+                    if (research == null || msg != null)
+                        return msg;
 
                     var state = player.ResearchState(research.Id);
                     if (cmd.Equals("start"))
@@ -240,7 +224,7 @@ namespace Equinox.ResearchCore.Modules
             ShowResearchList("Available Research", (player, id) =>
             {
                 var def = Manager.Definitions.ResearchById(id);
-                return player.ResearchState(id) == ResearchState.NotStarted && def.Trigger
+                return player.ResearchState(id) == ResearchState.NotStarted && !def.Hidden && def.Trigger
                            .BranchesWithPrereqs(player.ResearchState, player.HasUnlocked).Any();
             });
         }
@@ -282,7 +266,7 @@ namespace Equinox.ResearchCore.Modules
         {
             if (state.State == ResearchState.Completed)
                 ShowResearchInfoScreen(state, "Research Complete!",
-                    (!string.IsNullOrEmpty(state.Definition.CompletionMessage) ? state.Definition.CompletionMessage + "\n" : "") + "You've unlocked:", false,
+                    (!string.IsNullOrEmpty(state.Definition.CompletionMessage) ? state.Definition.CompletionMessage + "\n\n" : "") + "You've unlocked:", false,
                     false);
         }
 
@@ -315,8 +299,11 @@ namespace Equinox.ResearchCore.Modules
                 if (!string.IsNullOrWhiteSpace(unlockTagLine))
                     content.Append(unlockTagLine).Append('\n');
                 var first = true;
+                var msg = new HashSet<string>();
                 foreach (var k in def.Definition.UnlocksOriginal.OrderBy(a => a.SubtypeName).Select(StringifyUnlock))
                 {
+                    if (!msg.Add(k))
+                        continue;
                     if (!first)
                         content.Append('\n');
                     first = false;
@@ -365,8 +352,7 @@ namespace Equinox.ResearchCore.Modules
 
             foreach (var k in branch.Unlocked)
             {
-                output.Append(indent).Append(MyDefinitionManager.Static.GetDefinitionAny(k)?.DisplayNameText ??
-                                             k.ToString())
+                output.Append(indent).Append(MyDefinitionManager.Static.GetDefinitionAny(k)?.DisplayNameText ?? k.ToString())
                     .Append(" unlocked");
                 if (state.Player.HasUnlocked(k))
                     output.Append(" (done)");
@@ -376,9 +362,10 @@ namespace Equinox.ResearchCore.Modules
             foreach (var piece in branch.StatefulTriggers.Select(state.Definition.Trigger.StateStorageProvider))
             {
                 var hasItem = piece as Ob_Trigger_HasItem;
+                var location = piece as Ob_Trigger_Location;
                 var interact = piece as Ob_Trigger_Interact;
                 if (hasItem != null)
-                    output.Append(indent).Append(hasItem.Consume ? "Sacrifice" : "Has").Append(" ")
+                    output.Append(indent).Append(hasItem.Consume ? "Sacrifice" : "Have").Append(" ")
                         .Append(hasItem.Count).Append(" ")
                         .Append(MyDefinitionManager.Static.GetDefinitionAny(hasItem.DefinitionId)?.DisplayNameText ??
                                 hasItem.DefinitionId.ToString());
@@ -398,19 +385,18 @@ namespace Equinox.ResearchCore.Modules
                     }
 
                     output.Append("with ");
-                    var firstTarget = true;
+                    var itemsPrinted = 0;
+                    var totalItems = interact.BlockInteractTarget.Count + (interact.OnCharacterInteract ? 1 : 0);
                     if (interact.OnCharacterInteract)
                     {
-                        firstTarget = false;
+                        itemsPrinted++;
                         output.Append("another character");
                     }
 
-                    var blocksPrinted = 0;
                     foreach (var entry in interact.BlockInteractTarget)
                     {
-                        blocksPrinted++;
-                        if (!firstTarget)
-                            output.Append(blocksPrinted == interact.BlockInteractTarget.Count ? ", or " : ", ");
+                        itemsPrinted++;
+                        output.Append(itemsPrinted == totalItems ? (totalItems > 2 ? ", or " : " or ") : ", ");
                         output.Append(MyDefinitionManager.Static.GetDefinitionAny(entry)?.DisplayNameText ??
                                       entry.ToString());
                     }
@@ -430,6 +416,19 @@ namespace Equinox.ResearchCore.Modules
                                           k.ToString());
                         }
                     }
+                }
+                else if (location != null)
+                {
+                    output.Append(indent).Append("Get within ");
+                    if (location.Radius > 5e3)
+                        output.Append(Math.Floor(location.Radius / 1000)).Append(" km");
+                    else
+                        output.Append(Math.Floor(location.Radius)).Append(" m");
+                    if (location.ObscureLocation)
+                        output.Append(" of a location");
+                    else
+                        output.Append(" of ").Append((long) location.Position.X).Append(", ").Append((long) location.Position.Y).Append(", ")
+                            .Append((long) location.Position.Z);
                 }
 
                 if (state.StatefulStorage(piece.StateStorageKey) ?? false)

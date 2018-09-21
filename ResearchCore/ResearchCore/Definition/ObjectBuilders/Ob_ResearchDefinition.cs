@@ -44,6 +44,9 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders
 
         [XmlIgnore]
         public bool? ShowCompletionWindow;
+
+        [XmlIgnore]
+        public bool? Hidden;
         
         [DefaultValue(null)]
         [XmlElement(nameof(AutoStart), IsNullable = true)]
@@ -54,6 +57,18 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders
             {
                 if (value == null) AutoStart = null;
                 else AutoStart = bool.Parse(value);
+            }
+        }
+        
+        [DefaultValue(null)]
+        [XmlElement(nameof(Hidden), IsNullable = true)]
+        public string HiddenSerial
+        {
+            get { return Hidden?.ToString(); }
+            set
+            {
+                if (value == null) Hidden = null;
+                else Hidden = bool.Parse(value);
             }
         }
         

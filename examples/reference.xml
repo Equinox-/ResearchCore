@@ -35,7 +35,18 @@
 					<OnCharacterInteract>true</OnCharacterInteract>
 					<!-- the control the player has to press, from MyControlsSpace (https://github.com/KeenSoftwareHouse/SpaceEngineers/blob/master/Sources/Sandbox.Game/Game/MyControlsSpace.cs) -->
 					<GameControlId>PRIMARY_TOOL_ACTION</GameControlId>
+					<!-- require the entity to have the given value stored in mod storage GUID b4583514-48c4-47c1-94d8-3330cc1bd209.  Use !research setdata medical_unlock_key while looking at a block with a welder -->
+					<RequiredStorageValue>medical_unlock_key</RequiredStorageValue>
 				</Interact>
+				<!-- unlocks when a player is near a given point -->
+				<Location>
+					<!-- point the player needs to be near -->
+					<Position x="1000" y="0" z="0" />
+					<!-- distance the player must be within (spherical) -->
+					<Radius>10</Radius>
+					<!-- hide the actual location from the player -->
+					<ObscureLocation>true</ObscureLocation>
+				</Location>
 			</Any>
 		</Trigger>
 	</Ob_ResearchDefinition>

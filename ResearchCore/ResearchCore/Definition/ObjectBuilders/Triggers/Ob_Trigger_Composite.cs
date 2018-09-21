@@ -14,6 +14,7 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders.Triggers
         [XmlElement("HasItem", typeof(Ob_Trigger_HasItem))]
         [XmlElement("Interact", typeof(Ob_Trigger_Interact))]
         [XmlElement("Research", typeof(Ob_Trigger_ResearchState))]
+        [XmlElement("Location", typeof(Ob_Trigger_Location))]
         [XmlElement("Unlocked", typeof(Ob_Trigger_Unlocked))]
         public List<Ob_Trigger> Elements;
 

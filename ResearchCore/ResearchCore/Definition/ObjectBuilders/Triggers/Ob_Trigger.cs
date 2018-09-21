@@ -13,6 +13,7 @@ namespace Equinox.ResearchCore.Definition.ObjectBuilders.Triggers
         {
             get
             {
+                // ReSharper disable once InvertIf
                 if (!_stateStorageKeyComputed)
                 {
                     _stateStorageKeyCache = ComputeStorageKey();

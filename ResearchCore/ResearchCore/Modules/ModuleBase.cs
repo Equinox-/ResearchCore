@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Equinox.Utils.Logging;
+﻿using Equinox.Utils.Logging;
 
 namespace Equinox.ResearchCore.Modules
 {

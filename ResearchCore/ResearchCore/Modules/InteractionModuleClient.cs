@@ -1,27 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Equinox.ResearchCore.Definition.ObjectBuilders.Triggers;
 using Equinox.ResearchCore.Network;
 using Equinox.ResearchCore.State;
-using Equinox.ResearchCore.Utils;
 using Equinox.Utils;
-using Equinox.Utils.Logging;
-using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game.Entities;
 using Sandbox.Game.EntityComponents;
 using Sandbox.Game.Weapons;
 using Sandbox.ModAPI;
-using Sandbox.ModAPI.Weapons;
 using VRage.Game;
-using VRage.Game.Components;
 using VRage.Game.ModAPI;
-using VRage.Game.ModAPI.Interfaces;
-using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Utils;
 using VRageMath;
 
 namespace Equinox.ResearchCore.Modules

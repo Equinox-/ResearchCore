@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Equinox.ResearchCore.Definition;
 using Equinox.ResearchCore.Definition.ObjectBuilders.Triggers;
 using Equinox.ResearchCore.Network;

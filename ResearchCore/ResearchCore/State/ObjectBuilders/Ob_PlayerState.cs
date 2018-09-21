@@ -10,6 +10,8 @@ namespace Equinox.ResearchCore.State.ObjectBuilders
     {
         public ulong SteamId;
 
+        public bool AdminMode;
+        
         [XmlElement("Resesarch")]
         public Ob_PlayerResearchState[] States;
     }

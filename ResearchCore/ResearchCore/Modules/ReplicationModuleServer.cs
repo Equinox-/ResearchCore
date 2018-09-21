@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Equinox.ResearchCore.Definition;
+﻿using Equinox.ResearchCore.Definition;
 using Equinox.ResearchCore.Network;
 using Equinox.ResearchCore.State;
 using Equinox.Utils;
 using Sandbox.ModAPI;
-using VRage.Game;
 
 namespace Equinox.ResearchCore.Modules
 {
@@ -20,7 +14,7 @@ namespace Equinox.ResearchCore.Modules
 
         public override void Attach()
         {
-            if (!MyAPIGateway.Session.IsServerDecider() || MyAPIGateway.Multiplayer == null)
+            if (!MyAPIGateway.Session.IsServerDecider())
                 return;
             Manager.PlayerResearchStatefulStorageUpdate += OnPlayerResearchStatefulStorageUpdate;
             Manager.PlayerResearchStateChanged += OnPlayerResearchStateChanged;
