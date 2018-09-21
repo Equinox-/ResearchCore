@@ -57,6 +57,9 @@
 				
 		<!-- starts this as soon as any prerequesites are complete -->
 		<AutoStart>true</AutoStart>
+
+		<!-- do not display this research as available unless the player starts it -->
+		<Hidden>true</Hidden>
 		
 		<Trigger>
 			<!-- This research requires both of the following conditions to be satisfied -->

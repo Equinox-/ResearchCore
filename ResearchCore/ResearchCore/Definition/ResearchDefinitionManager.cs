@@ -171,6 +171,8 @@ namespace Equinox.ResearchCore.Definition
                     _dest.ShowCompletionWindow = ob.ShowCompletionWindow;
                 if (ob.UpdatesAsNotifications.HasValue)
                     _dest.UpdatesAsNotifications = ob.UpdatesAsNotifications;
+                if (ob.Hidden.HasValue)
+                    _dest.Hidden = ob.Hidden;
                 else if (ob.Trigger?.Simplify() != null)
                 {
                     switch (_dest.TriggerMergeStrategy)
